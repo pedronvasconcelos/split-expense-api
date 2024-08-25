@@ -1,4 +1,4 @@
-package tech.pedrovasconcelos
+package tech.splitexpense
 
 import io.micronaut.runtime.Micronaut.run
 fun main(args: Array<String>) {

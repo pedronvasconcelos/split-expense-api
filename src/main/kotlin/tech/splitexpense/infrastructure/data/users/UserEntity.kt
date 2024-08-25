@@ -1,45 +1,44 @@
 package tech.splitexpense.infrastructure.data.users
 
-import jakarta.persistence.*
+import io.micronaut.data.annotation.*
+import io.micronaut.serde.annotation.Serdeable
 import tech.splitexpense.users.UserRoles
 import tech.splitexpense.users.UserStatus
 import java.time.Instant
 import java.time.LocalDate
 import java.util.*
 
-@Entity
-@Table(name = "users")
-class UserEntity(
-        @Id
-        @Column(name = "id")
+@Serdeable
+@MappedEntity("users")
+data class UserEntity(
+        @field:Id
+        @field:MappedProperty("id")
         var id: UUID = UUID.randomUUID(),
 
-        @Column(name = "first_name", nullable = false)
+        @field:MappedProperty("first_name")
         var firstName: String,
 
-        @Column(name = "last_name", nullable = false)
+        @field:MappedProperty("last_name")
         var lastName: String,
 
-        @Column(name = "email", nullable = false, unique = true)
+        @field:MappedProperty("email")
         var email: String,
 
-        @Enumerated(EnumType.STRING)
-        @Column(name = "status", nullable = false)
+        @MappedProperty("status")
         var status: UserStatus = UserStatus.ACTIVE,
 
-        @Column(name = "birth_date")
-        var birthDate: LocalDate?,
+        @field:MappedProperty("birth_date")
+        var birthDate: LocalDate? = null,
 
-        @Column(name = "created_at", nullable = false)
+        @field:MappedProperty("created_at")
         var createdAt: Instant = Instant.now(),
 
-        @Column(name = "updated_at")
+        @field:MappedProperty("updated_at")
         var updatedAt: Instant? = null,
 
-        @Column(name = "deleted_at")
+        @field:MappedProperty("deleted_at")
         var deletedAt: Instant? = null,
 
-        @Enumerated(EnumType.STRING)
-        @Column(name = "role", nullable = false)
+        @MappedProperty("role")
         var role: UserRoles = UserRoles.USER
 )

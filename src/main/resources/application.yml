@@ -1,7 +1,16 @@
 micronaut:
   application:
     name: split-expense-api
-
+  server:
+    port: 8080
+  views:
+    handlebars:
+      enabled: true
+  openapi:
+    views:
+      spec: swagger-ui.hbs
+    schema:
+      generate: "true"
   router:
     static-resources:
       swagger:
@@ -10,15 +19,34 @@ micronaut:
       swagger-ui:
         paths: classpath:META-INF/swagger/views/swagger-ui
         mapping: /swagger-ui/**
-  openapi:
-    enabled: true
-    views:
-      spec:
-        rapidoc:
-          enabled: true
-        swagger-ui:
-          enabled: true
-          theme: flattop
+
+
+datasources:
+  default:
+    url: jdbc:postgresql://localhost:5432/splitexpense
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: 'sa'
+    dialect: POSTGRES
+flyway:
+  datasources:
+    default:
+      enabled: true
+
+
+
+jpa:
+  default:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: none
+        show_sql: true
+
+netty:
+  default:
+    allocator:
+      max-order: 3
 
 app:
-  hello: Hello World
+  hello: "Hello World"

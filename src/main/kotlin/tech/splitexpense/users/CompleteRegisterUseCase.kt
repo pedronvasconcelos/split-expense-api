@@ -1,5 +1,7 @@
 package tech.splitexpense.application.usecases
 
+import io.micronaut.core.annotation.Introspected
+import io.micronaut.serde.annotation.Serdeable
 import jakarta.inject.Singleton
 import tech.splitexpense.shared.EmailAddress
 import tech.splitexpense.users.User
@@ -13,7 +15,7 @@ class CompleteRegisterUseCase(private val userRepository: UserRepository) {
     fun execute(request: CompleteRegisterRequest): CompleteRegisterResponse {
         validateRequest(request)
 
-        userRepository.findByEmail(request.email)?.let {
+        userRepository.getByEmail(request.email)?.let {
             throw UserAlreadyExistsException("User with email ${request.email} already exists")
         }
 
@@ -34,19 +36,20 @@ class CompleteRegisterUseCase(private val userRepository: UserRepository) {
         require(request.firstName.isNotBlank()) { "First name cannot be blank" }
         require(request.lastName.isNotBlank()) { "Last name cannot be blank" }
         require(request.email.isNotBlank()) { "Email cannot be blank" }
-        require(request.birthDate != null) { "Birth date cannot be null" }
         require(request.birthDate.isBefore(LocalDate.now())) { "Birth date must be in the past" }
     }
 }
 
 class UserAlreadyExistsException(message: String) : RuntimeException(message)
 
-// DTOs
+@Introspected
+@Serdeable
 data class CompleteRegisterRequest(
         val firstName: String,
         val lastName: String,
         val email: String,
         val birthDate: LocalDate
 )
-
+@Introspected
+@Serdeable
 data class CompleteRegisterResponse(val userId: String)

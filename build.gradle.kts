@@ -1,4 +1,3 @@
-
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.9.25"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.9.25"
@@ -11,7 +10,7 @@ plugins {
 version = "0.1"
 group = "tech.pedrovasconcelos"
 
-val kotlinVersion=project.properties.get("kotlinVersion")
+val kotlinVersion = project.properties.get("kotlinVersion")
 repositories {
     mavenCentral()
 }
@@ -20,33 +19,48 @@ dependencies {
     runtimeOnly("org.yaml:snakeyaml:2.0")
     ksp("io.micronaut:micronaut-http-validation")
     ksp("io.micronaut.serde:micronaut-serde-processor")
-    ksp("io.micronaut.openapi:micronaut-openapi:6.3.0!!")
+    ksp("io.micronaut.data:micronaut-data-processor")
     implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
-    compileOnly("io.micronaut:micronaut-http-client")
+    implementation("io.micronaut:micronaut-http-client")
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
-    testImplementation("io.micronaut:micronaut-http-client")
-    implementation("io.micronaut.sql:micronaut-hibernate-jpa")
-    implementation("io.micronaut.data:micronaut-data-tx-hibernate")
-    implementation("io.micronaut.sql:micronaut-jdbc-hikari")
-    implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
-    implementation("jakarta.persistence:jakarta.persistence-api")
-    runtimeOnly("org.postgresql:postgresql")
-    compileOnly("io.micronaut.openapi:micronaut-openapi-annotations:6.3.0!!")
-}
 
+    // Micronaut Data JDBC
+    implementation("io.micronaut.data:micronaut-data-jdbc")
+    implementation("io.micronaut.sql:micronaut-jdbc-hikari")
+
+    // PostgreSQL driver
+    runtimeOnly("org.postgresql:postgresql")
+
+    // Flyway for database migrations
+    implementation("io.micronaut.flyway:micronaut-flyway")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql")
+
+
+
+    // OpenAPI and Swagger
+    implementation("io.swagger.core.v3:swagger-annotations")
+    implementation("io.micronaut.openapi:micronaut-openapi")
+
+    // View engines
+    implementation("io.micronaut.views:micronaut-views-velocity")
+    implementation("io.micronaut.views:micronaut-views-handlebars")
+
+    // Test dependencies
+    testImplementation("io.micronaut:micronaut-http-client")
+    testRuntimeOnly("com.h2database:h2")
+}
 
 application {
-    mainClass = "tech.pedrovasconcelos.ApplicationKt"
+    mainClass.set("tech.pedrovasconcelos.ApplicationKt")
 }
+
 java {
     sourceCompatibility = JavaVersion.toVersion("21")
 }
-
-
 
 micronaut {
     runtime("netty")
@@ -56,8 +70,6 @@ micronaut {
         annotations("tech.splitexpense.*")
     }
     aot {
-        // Please review carefully the optimizations enabled below
-        // Check https://micronaut-projects.github.io/micronaut-aot/latest/guide/ for more details
         optimizeServiceLoading = false
         convertYamlToJava = false
         precomputeOperations = true
@@ -67,13 +79,8 @@ micronaut {
         optimizeNetty = true
         replaceLogbackXml = true
     }
-
-
-
 }
-
 
 tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative") {
-    jdkVersion = "21"
+    jdkVersion.set("21")
 }
-

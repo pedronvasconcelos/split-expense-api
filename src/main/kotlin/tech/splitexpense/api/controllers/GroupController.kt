@@ -13,7 +13,7 @@ import tech.splitexpense.groups.usecases.CreateNewGroupUseCase
 class GroupController(private val createNewGroupUseCase: CreateNewGroupUseCase) {
 
 
-    @Post("/create")
+    @Post("/")
     @Operation(summary = "Create a new group", description = "Create a new group")
     @ApiResponse(responseCode = "201", description = "Group created successfully")
     fun createGroup(@Body request: CreateGroupRequest): HttpResponse<Any> {

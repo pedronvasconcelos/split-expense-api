@@ -18,19 +18,19 @@ class ExpenseTest {
     fun `cannot add expense with non-member participants`() {
         val owner = createUser("Owner")
         val nonMember = createUser("NonMember")
-        val group = Group.create(GroupId(UUID.randomUUID()), "Test Group", owner)
-        val expense = Expense(
-                ExpenseId(UUID.randomUUID()),
-                "Test Expense",
-                Money(BigDecimal("50.00")),
-                group,
-                setOf(owner, nonMember),  // nonMember is not in the group
-                Instant.now(),
-                null,
-                null
-        )
+        val expenseGroup = ExpenseGroup.create(GroupId(UUID.randomUUID()), "Test Group", owner, GroupCategory.OTHER)
+
         assertThrows<IllegalArgumentException> {
-            group.addExpense(expense)
+            val expense = Expense(
+                    ExpenseId(UUID.randomUUID()),
+                    "Test Expense",
+                    Money(BigDecimal("50.00")),
+                    expenseGroup,
+                    setOf(owner, nonMember),  // nonMember is not in the group
+                    Instant.now(),
+                    null,
+                    null
+            )
         }
     }
 

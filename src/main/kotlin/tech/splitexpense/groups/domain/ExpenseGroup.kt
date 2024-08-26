@@ -4,7 +4,7 @@ import tech.splitexpense.users.User
 import java.time.Instant
 import java.util.UUID
 
-data class Group private constructor(
+data class ExpenseGroup constructor(
         val id: GroupId,
         val name: String,
         val members: Set<User>,
@@ -13,7 +13,8 @@ data class Group private constructor(
         val updatedAt: Instant?,
         val owner: User,
         val deletedAt: Instant?,
-        val finishedAt: Instant?
+        val finishedAt: Instant?,
+        var category: GroupCategory
 ) {
     init {
         require(name.isNotBlank()) { "Group name cannot be blank" }
@@ -30,7 +31,7 @@ data class Group private constructor(
     val totalExpenses: Money
         get() = expenses.fold(Money.ZERO) { acc, expense -> acc + expense.amount }
 
-    fun addMember(user: User): Group {
+    fun addMember(user: User): ExpenseGroup {
         require(isActive) { "Cannot add member to inactive group" }
         return copy(
                 members = members + user,
@@ -38,7 +39,7 @@ data class Group private constructor(
         )
     }
 
-    fun removeMember(user: User): Group {
+    fun removeMember(user: User): ExpenseGroup {
         require(isActive) { "Cannot remove member from inactive group" }
         require(user != owner) { "Cannot remove the owner from the group" }
         require(user in members) { "User is not a member of this group" }
@@ -48,7 +49,7 @@ data class Group private constructor(
         )
     }
 
-    fun addExpense(expense: Expense): Group {
+    fun addExpense(expense: Expense): ExpenseGroup {
         require(isActive) { "Cannot add expense to inactive group" }
         require(expense.participants.all { it in members }) { "All expense participants must be group members" }
         return copy(
@@ -57,7 +58,7 @@ data class Group private constructor(
         )
     }
 
-    fun markAsFinished(): Group {
+    fun markAsFinished(): ExpenseGroup {
         require(isActive) { "Cannot finish an inactive group" }
         return copy(
                 finishedAt = Instant.now(),
@@ -65,17 +66,23 @@ data class Group private constructor(
         )
     }
 
-    fun delete(): Group {
+    fun delete(): ExpenseGroup {
         require(isActive) { "Cannot delete an inactive group" }
         return copy(
                 deletedAt = Instant.now(),
                 updatedAt = Instant.now()
         )
     }
+    fun updateCategory(category: GroupCategory): ExpenseGroup {
+        return copy(
+                category = category,
+                updatedAt = Instant.now()
+        )
+    }
 
     companion object {
-        fun create(id: GroupId, name: String, owner: User): Group {
-            return Group(
+        fun create(id: GroupId, name: String, owner: User, category : GroupCategory): ExpenseGroup {
+            return ExpenseGroup(
                     id = id,
                     name = name,
                     members = setOf(owner),
@@ -84,14 +91,35 @@ data class Group private constructor(
                     updatedAt = null,
                     owner = owner,
                     deletedAt = null,
-                    finishedAt = null
+                    finishedAt = null,
+                    category = category
             )
         }
     }
 }
 
 @JvmInline
-value class GroupId(val value: UUID)
+value class GroupId(val value: UUID){
+    override fun toString(): String = value.toString()
+
+
+    fun toUUID(): UUID {
+        return value
+    }
+}
+
+enum class GroupCategory {
+    FRIENDS,
+    FAMILY,
+    WORK,
+    TRAVEL,
+    OTHER,
+    ROOMMATES,
+    SPORTS,
+    STUDIES,
+    BUSINESS,
+    CHARITY
+}
 
 
 

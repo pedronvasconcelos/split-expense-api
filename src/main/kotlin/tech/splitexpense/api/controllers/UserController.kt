@@ -7,9 +7,9 @@ import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Post
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
-import tech.splitexpense.application.usecases.CompleteRegisterRequest
-import tech.splitexpense.application.usecases.CompleteRegisterUseCase
-import tech.splitexpense.application.usecases.UserAlreadyExistsException
+import tech.splitexpense.users.CompleteRegisterRequest
+import tech.splitexpense.users.CompleteRegisterUseCase
+import tech.splitexpense.users.UserAlreadyExistsException
 
 @Controller("/api/users")
 class UserController(private val completeRegisterUseCase: CompleteRegisterUseCase) {

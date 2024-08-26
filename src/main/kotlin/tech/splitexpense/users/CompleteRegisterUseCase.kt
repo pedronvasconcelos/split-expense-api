@@ -1,12 +1,9 @@
-package tech.splitexpense.application.usecases
+package tech.splitexpense.users
 
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.serde.annotation.Serdeable
 import jakarta.inject.Singleton
 import tech.splitexpense.shared.models.EmailAddress
-import tech.splitexpense.users.User
-import tech.splitexpense.users.UserId
-import tech.splitexpense.users.UserRepository
 import java.time.LocalDate
 import java.util.UUID
 

@@ -9,11 +9,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import tech.splitexpense.groups.usecases.CreateGroupRequest
 import tech.splitexpense.groups.usecases.CreateNewGroupUseCase
 
-@Controller("/expense")
-class ExpenseController(private val createNewGroupUseCase: CreateNewGroupUseCase) {
+@Controller("/group")
+class GroupController(private val createNewGroupUseCase: CreateNewGroupUseCase) {
 
 
-    @Post("/group/create")
+    @Post("/create")
     @Operation(summary = "Create a new group", description = "Create a new group")
     @ApiResponse(responseCode = "201", description = "Group created successfully")
     fun createGroup(@Body request: CreateGroupRequest): HttpResponse<Any> {

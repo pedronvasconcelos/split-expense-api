@@ -2,7 +2,7 @@ package tech.splitexpense.users
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import tech.splitexpense.shared.EmailAddress
+import tech.splitexpense.shared.models.EmailAddress
 import java.time.LocalDate
 import java.util.*
 import org.junit.jupiter.api.Assertions.*
@@ -70,7 +70,7 @@ class UserTest {
     fun `should allow custom id`() {
         val customId = UUID.randomUUID()
         val user = User(
-                id = customId,
+                id = UserId(customId),
                 firstName = "John",
                 lastName = "Doe",
                 email = EmailAddress("john.doe@example.com"),

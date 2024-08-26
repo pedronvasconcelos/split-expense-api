@@ -1,20 +1,20 @@
 package tech.splitexpense.users
 
-import tech.splitexpense.shared.EmailAddress
+import tech.splitexpense.shared.models.EmailAddress
 import java.time.Instant
 import java.time.LocalDate
 import java.util.*
 
-class User (var id: UUID  = UUID.randomUUID(),
+data class User (var id: UserId  = UserId(UUID.randomUUID()),
             var firstName: String,
             var lastName: String,
-            var email:  EmailAddress,
-            var status: UserStatus = UserStatus.ACTIVE ,
+            var email: EmailAddress,
+            var status: UserStatus = UserStatus.ACTIVE,
             var birthDate: LocalDate? = null,
             var createdAt: Instant = Instant.now(),
-             var updatedAt: Instant? = null,
-             var deletedAt: Instant? = null,
-             var roles: UserRoles = UserRoles.USER,
+            var updatedAt: Instant? = null,
+            var deletedAt: Instant? = null,
+            var roles: UserRoles = UserRoles.USER,
         ){
     init {
         validate()
@@ -41,7 +41,18 @@ enum class UserRoles {
 }
 
 
+@JvmInline
+value class UserId(val value: UUID) {
+    init {
+        require(value != UUID(0, 0)) { "User ID cannot be empty" }
+    }
+
+    override fun toString(): String = value.toString()
 
 
+    fun toUUID(): UUID {
+        return value
+    }
+}
 
 

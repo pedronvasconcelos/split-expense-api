@@ -1,4 +1,4 @@
-package tech.splitexpense.shared
+package tech.splitexpense.shared.models
 
 class EmailAddress(private val email: String){
     init {

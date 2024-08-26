@@ -1,17 +1,16 @@
 package tech.splitexpense.infrastructure.data.users
 
 import jakarta.inject.Singleton
-import tech.splitexpense.shared.EmailAddress
+import tech.splitexpense.shared.models.EmailAddress
 import tech.splitexpense.users.User
-import tech.splitexpense.users.UserRoles
-import tech.splitexpense.users.UserStatus
+import tech.splitexpense.users.UserId
 
 
 @Singleton
 object UserMapper {
     fun toEntity(user: User): UserEntity {
         return UserEntity(
-                id = user.id,
+                id = user.id.toUUID(),
                 firstName = user.firstName,
                 lastName = user.lastName,
                 email = user.email.toString(),
@@ -26,7 +25,7 @@ object UserMapper {
 
     fun toDomain(entity: UserEntity): User {
         return User(
-                id = entity.id,
+                id = UserId(entity.id),
                 firstName = entity.firstName,
                 lastName = entity.lastName,
                 email = EmailAddress(entity.email),

@@ -28,9 +28,9 @@ class AcceptGroupInvitationUseCase(private val groupRepository: ExpenseGroupRepo
                 ?: throw IllegalArgumentException("Group with ID ${invitation.group.id} not found")
 
 
-        group.addMember(user)
+        val updatedGroup = group.addMember(user)
 
-        groupRepository.update(group)
+        groupRepository.update(updatedGroup)
 
         val acceptedInvitation = invitation.accept()
         invitationRepository.update(acceptedInvitation)

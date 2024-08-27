@@ -10,6 +10,8 @@ import io.micronaut.transaction.annotation.Transactional
 import jakarta.inject.Singleton
 
 import tech.splitexpense.groups.domain.ExpenseGroupRepository
+import tech.splitexpense.infrastructure.data.users.UserEntity
+import tech.splitexpense.infrastructure.data.users.UserMapper
 import java.util.*
 
 @Singleton
@@ -35,15 +37,13 @@ abstract class ExpenseGroupRepositoryImpl : ExpenseGroupRepository, CrudReposito
 
     override fun update(expenseGroup: ExpenseGroup): ExpenseGroup {
         val existingGroup = findById(expenseGroup.id.value).orElseThrow { Exception("Group not found") }
-        val updatedGroupEntity = GroupMapper.toEntity(expenseGroup)
 
-        updatedGroupEntity.members = updatedGroupEntity.members
-                .filterNot { updatedMember ->
-                    existingGroup.members.any { it.id == updatedMember.id }
-                }
+        existingGroup.members = expenseGroup.members
+                .filter { expenseMember ->
+                    existingGroup.members.none { it.id == expenseMember.id.value }
+                }.map { UserMapper.toEntity(it) }
                 .toMutableSet()
-
-        return GroupMapper.toDomain(update(updatedGroupEntity))
+        return GroupMapper.toDomain(update(existingGroup))
     }
 
 

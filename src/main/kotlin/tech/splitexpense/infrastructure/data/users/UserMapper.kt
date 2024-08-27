@@ -10,7 +10,7 @@ import tech.splitexpense.users.UserId
 object UserMapper {
     fun toEntity(user: User): UserEntity {
         return UserEntity(
-                id = user.id.toUUID(),
+                id = user.id.value,
                 firstName = user.firstName,
                 lastName = user.lastName,
                 email = user.email.toString(),

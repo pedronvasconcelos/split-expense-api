@@ -42,17 +42,32 @@ enum class UserRoles {
 
 
 @JvmInline
-value class UserId(val value: UUID) {
+value class UserId(val value: UUID) : Comparable<UserId> {
+    constructor(uuidString: String) : this(UUID.fromString(uuidString))
+
     init {
         require(value != UUID(0, 0)) { "User ID cannot be empty" }
     }
 
     override fun toString(): String = value.toString()
 
+     fun isEquals(other: Any?): Boolean = when (other) {
+        is UserId -> value == other.value
+        is UUID -> value == other
+        else -> false
+    }
 
-    fun toUUID(): UUID {
-        return value
+
+    override fun compareTo(other: UserId): Int = value.compareTo(other.value)
+
+    companion object {
+        fun randomUUID(): UserId = UserId(UUID.randomUUID())
     }
 }
 
+operator fun UUID.compareTo(other: UserId): Int = this.compareTo(other.value)
+operator fun UserId.compareTo(other: UUID): Int = this.value.compareTo(other)
 
+val UserId.uuid: UUID get() = this.value
+
+fun UUID.toUserId(): UserId = UserId(this)

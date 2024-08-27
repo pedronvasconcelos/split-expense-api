@@ -4,6 +4,8 @@ import GroupCategory
 import io.micronaut.data.annotation.*
 import io.micronaut.data.annotation.event.PrePersist
 import io.micronaut.data.annotation.event.PreUpdate
+import io.micronaut.data.annotation.sql.JoinColumn
+import io.micronaut.data.annotation.sql.JoinTable
 import io.micronaut.data.model.naming.NamingStrategies
 import io.micronaut.serde.annotation.Serdeable
 import tech.splitexpense.infrastructure.data.expenses.ExpenseEntity
@@ -23,10 +25,15 @@ data class ExpenseGroupEntity(
         @field:MappedProperty("name")
         var name: String,
 
+        @MappedProperty("members")
         @Relation(
                 value = Relation.Kind.MANY_TO_MANY,
-                cascade = [Relation.Cascade.PERSIST],
-                mappedBy = "expenseGroupId"
+                cascade = [Relation.Cascade.PERSIST, Relation.Cascade.UPDATE]
+        )
+        @JoinTable(
+                name = "group_members",
+                joinColumns = [JoinColumn(name = "group_id")],
+                inverseJoinColumns = [JoinColumn(name = "user_id")]
         )
         var members: Set<UserEntity> = emptySet(),
 

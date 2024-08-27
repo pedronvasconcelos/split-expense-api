@@ -17,6 +17,9 @@ data class ExpenseGroup constructor(
         var category: GroupCategory
 ) {
     init {
+        if(!members.contains(owner)){
+            members.plus(owner)
+        }
         require(name.isNotBlank()) { "Group name cannot be blank" }
         require(members.isNotEmpty()) { "Group must have at least one member" }
         require(owner in members) { "Owner must be a member of the group" }
@@ -33,6 +36,9 @@ data class ExpenseGroup constructor(
 
     fun addMember(user: User): ExpenseGroup {
         require(isActive) { "Cannot add member to inactive group" }
+        if(user in members) {
+            return this
+        }
         return copy(
                 members = members + user,
                 updatedAt = Instant.now()

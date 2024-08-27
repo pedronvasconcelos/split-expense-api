@@ -20,12 +20,6 @@ data class ExpenseGroup constructor(
         if(!members.contains(owner)){
             members.plus(owner)
         }
-        require(name.isNotBlank()) { "Group name cannot be blank" }
-        require(members.isNotEmpty()) { "Group must have at least one member" }
-        require(owner in members) { "Owner must be a member of the group" }
-        require(expenses.all { it.participants.all { participant -> participant in members } }) {
-            "All expense participants must be group members"
-        }
     }
 
     val isActive: Boolean

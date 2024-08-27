@@ -15,9 +15,8 @@ import javax.swing.GroupLayout.Group
 @MappedEntity("group_invitations")
 data class GroupInvitationEntity(
         @field:Id
-        @field:AutoPopulated
         @field:MappedProperty("id")
-        var id: UUID = UUID.randomUUID(),
+        var id: UUID,
 
         @Relation(value = Relation.Kind.MANY_TO_ONE)
         @field:MappedProperty("group_id")

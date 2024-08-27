@@ -6,6 +6,7 @@ import io.micronaut.data.annotation.Join
 import io.micronaut.data.jdbc.annotation.JdbcRepository
 import io.micronaut.data.model.query.builder.sql.Dialect
 import io.micronaut.data.repository.CrudRepository
+import io.micronaut.transaction.annotation.Transactional
 import jakarta.inject.Singleton
 
 import tech.splitexpense.groups.domain.ExpenseGroupRepository
@@ -33,8 +34,16 @@ abstract class ExpenseGroupRepositoryImpl : ExpenseGroupRepository, CrudReposito
 
 
     override fun update(expenseGroup: ExpenseGroup): ExpenseGroup {
-        val groupEntity = GroupMapper.toEntity(expenseGroup)
-        return GroupMapper.toDomain(update(groupEntity))
+        val existingGroup = findById(expenseGroup.id.value).orElseThrow { Exception("Group not found") }
+        val updatedGroupEntity = GroupMapper.toEntity(expenseGroup)
+
+        updatedGroupEntity.members = updatedGroupEntity.members
+                .filterNot { updatedMember ->
+                    existingGroup.members.any { it.id == updatedMember.id }
+                }
+                .toMutableSet()
+
+        return GroupMapper.toDomain(update(updatedGroupEntity))
     }
 
 

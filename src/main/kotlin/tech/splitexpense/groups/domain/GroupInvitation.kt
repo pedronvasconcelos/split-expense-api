@@ -19,6 +19,10 @@ data class GroupInvitation (
 
         ) {
 
+    fun accept(): GroupInvitation {
+        return this.copy(status = GroupInvitationStatus.ACCEPTED, respondedAt = Instant.now())
+    }
+
 }
 
 @JvmInline

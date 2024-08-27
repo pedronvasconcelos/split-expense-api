@@ -6,14 +6,12 @@ import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Post
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
-import tech.splitexpense.groups.usecases.CreateGroupRequest
-import tech.splitexpense.groups.usecases.CreateNewGroupUseCase
-import tech.splitexpense.groups.usecases.InviteUserToGroupRequest
-import tech.splitexpense.groups.usecases.InviteUserToGroupUseCase
+import tech.splitexpense.groups.usecases.*
 
 @Controller("/group")
 class GroupController(private val createNewGroupUseCase: CreateNewGroupUseCase,
-                      private val inviteUserToGroupUseCase: InviteUserToGroupUseCase) {
+                      private val inviteUserToGroupUseCase: InviteUserToGroupUseCase,
+                      private val acceptGroupInvitationUseCase: AcceptGroupInvitationUseCase) {
 
 
     @Post("/")
@@ -39,6 +37,22 @@ class GroupController(private val createNewGroupUseCase: CreateNewGroupUseCase,
         return try {
             val response = inviteUserToGroupUseCase.execute(request)
             HttpResponse.created(response)
+        }
+        catch (e: IllegalArgumentException) {
+            HttpResponse.badRequest(mapOf("error" to e.message))
+        }
+        catch (e: Exception) {
+            HttpResponse.serverError(mapOf("error" to "An unexpected error occurred"))
+        }
+    }
+
+    @Post("/accept-invitation")
+    @Operation(summary = "Accept a group invitation", description = "Accept a group invitation")
+    @ApiResponse(responseCode = "200", description = "Invitation accepted successfully")
+    fun acceptGroupInvitation(@Body request: AcceptGroupInvitationRequest): HttpResponse<Any> {
+        return try {
+            val response = acceptGroupInvitationUseCase.execute(request)
+            HttpResponse.ok(response)
         }
         catch (e: IllegalArgumentException) {
             HttpResponse.badRequest(mapOf("error" to e.message))

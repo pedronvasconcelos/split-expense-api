@@ -5,16 +5,16 @@ import java.time.Instant
 import java.time.LocalDate
 import java.util.*
 
-data class User (var id: UserId  = UserId(UUID.randomUUID()),
-            var firstName: String,
-            var lastName: String,
-            var email: EmailAddress,
-            var status: UserStatus = UserStatus.ACTIVE,
-            var birthDate: LocalDate? = null,
-            var createdAt: Instant = Instant.now(),
-            var updatedAt: Instant? = null,
-            var deletedAt: Instant? = null,
-            var roles: UserRoles = UserRoles.USER,
+data class User (val id: UserId  = UserId(UUID.randomUUID()),
+            val firstName: String,
+            val lastName: String,
+            val email: EmailAddress,
+            val status: UserStatus = UserStatus.ACTIVE,
+            val birthDate: LocalDate? = null,
+            val createdAt: Instant = Instant.now(),
+            val updatedAt: Instant? = null,
+            val deletedAt: Instant? = null,
+            val roles: UserRoles = UserRoles.USER,
         ){
     init {
         validate()
